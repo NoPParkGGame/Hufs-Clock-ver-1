@@ -1,0 +1,21 @@
+/* 테마 전환 효과 */
+body,
+.container,
+.timer,
+.period-type,
+.current-time-label,
+#currentTime {
+    transition: all 0.5s ease;
+}
+
+/* 페이드 효과 */
+body::after {
+    transition: background-color 0.5s ease;
+}
+
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
