@@ -2,15 +2,22 @@
 
 한국외대 종강/개강까지 남은 시간을 보여주는 Chrome Extension입니다.
 
-## 기능
-- 실시간 종강/개강까지 남은 시간 표시
-- 최신 HUFS 공지사항 표시 (최근 10개)
-- 테마 변경 (기본/다크)
-- 유틸리티 버튼 (종정시, 홈페이지, 이클래스, 도서관)
-- **새 탭 페이지 지원** - Chrome 새 탭을 열 때 HUFS 시계 표시
-- **새로고침 버튼으로 자동 크롤링** (Native Messaging 방식)
+## Chrome Web Store 설치 (권장)
 
-## 설치 및 설정
+Chrome Web Store에서 다운로드하여 설치하는 방법입니다.
+
+### 1. Extension 설치
+- [HUFS 종강시계](https://chromewebstore.google.com/detail/hufs-%EC%A2%85%EA%B0%95%EC%8B%9C%EA%B3%84/pgfecnhkdopaheeiipmfikblmjmiiojj)에서 설치
+- Chrome에 자동으로 추가됩니다
+
+### 2. Native Messaging 설정 (중요!)
+Chrome Web Store 버전은 자동으로 설정되어 있으니 바로 사용 가능합니다.
+
+**문제가 발생하는 경우:**
+1. `register_host.bat`를 **관리자 권한으로** 실행
+2. 크롤링이 작동하는지 확인
+
+## 로컬 개발용 설치
 
 ### 1. 패키지 설치
 ```bash
@@ -88,7 +95,22 @@ Hufs_Clock/
 - **크롤링**: BeautifulSoup, requests
 
 ## 문제 해결
+
+### Native Messaging 오류
+- **"Access to the specified native messaging host is forbidden"**
+  - **원인**: Extension ID가 native_messaging_host.json에 등록되지 않음
+  - **해결**: `register_host.bat`를 관리자 권한으로 재실행
+  - **확인**: Chrome Web Store 버전은 자동으로 설정되어 있음
+
+### 크롤링 관련 오류
 - **크롤링 실패**: `register_host.bat`를 관리자 권한으로 재실행
+- **Extension ID 오류**: `native_messaging_host.json`의 allowed_origins 확인
+- **새 탭 표시 안됨**: manifest.json의 chrome_url_overrides 확인
+
+### 설치 관련 오류
+- **Python 설치 오류**: `python --version`으로 Python 3.8+ 설치 확인
+- **패키지 설치 실패**: `pip install -r requirements.txt` 재실행
+- **호스트 등록 실패**: 관리자 권한으로 `register_host.bat` 실행
 - **Extension ID 오류**: `native_messaging_host.json`의 allowed_origins 확인
 - **새 탭 표시 안됨**: manifest.json의 chrome_url_overrides 확인
 

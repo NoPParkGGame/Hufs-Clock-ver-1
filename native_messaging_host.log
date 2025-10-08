@@ -190,3 +190,123 @@
 2025-10-07 09:27:46,069 - INFO - 메시지 수신: {'action': 'update_cache'}
 2025-10-07 09:27:46,069 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
 2025-10-07 09:27:48,750 - INFO - 크롤링 성공
+2025-10-07 17:02:28,270 - INFO - Native messaging host 시작
+2025-10-07 17:02:28,274 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:02:28,274 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:02:30,808 - INFO - Native messaging host 시작
+2025-10-07 17:02:30,808 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:02:30,808 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:02:31,958 - INFO - 크롤링 성공
+2025-10-07 17:02:34,103 - INFO - 크롤링 성공
+2025-10-07 17:02:35,764 - INFO - Native messaging host 시작
+2025-10-07 17:02:35,764 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:02:35,765 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:02:38,445 - INFO - 크롤링 성공
+2025-10-07 17:03:07,011 - INFO - Native messaging host 시작
+2025-10-07 17:03:07,011 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:03:07,011 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:03:09,750 - INFO - 크롤링 성공
+2025-10-07 17:07:19,064 - INFO - Native messaging host 시작
+2025-10-07 17:07:19,065 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:07:19,065 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:07:22,408 - INFO - 크롤링 성공
+2025-10-07 17:07:34,249 - INFO - Native messaging host 시작
+2025-10-07 17:07:34,249 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:07:34,249 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:07:36,923 - INFO - 크롤링 성공
+2025-10-07 17:08:03,933 - INFO - Native messaging host 시작
+2025-10-07 17:08:03,933 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:08:03,933 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:08:06,373 - INFO - 크롤링 성공
+2025-10-07 17:08:24,408 - INFO - Native messaging host 시작
+2025-10-07 17:08:24,408 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:08:24,408 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:08:26,663 - INFO - 크롤링 성공
+2025-10-07 17:08:38,243 - INFO - Native messaging host 시작
+2025-10-07 17:08:38,244 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:08:38,244 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:08:40,745 - INFO - 크롤링 성공
+2025-10-07 17:14:16,151 - INFO - Native messaging host 시작
+2025-10-07 17:14:16,151 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:14:16,152 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:14:18,736 - INFO - 크롤링 성공
+2025-10-07 17:14:21,501 - INFO - Native messaging host 시작
+2025-10-07 17:14:21,501 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:14:21,501 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:14:23,794 - INFO - 크롤링 성공
+2025-10-07 17:14:50,832 - INFO - Native messaging host 시작
+2025-10-07 17:14:50,832 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 17:14:50,832 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 17:14:53,190 - INFO - 크롤링 성공
+2025-10-07 20:41:14,387 - INFO - Native messaging host 시작
+2025-10-07 20:41:14,388 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 20:41:14,389 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 20:41:18,496 - INFO - 크롤링 성공
+2025-10-07 20:42:03,051 - INFO - Native messaging host 시작
+2025-10-07 20:42:03,053 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 20:42:03,053 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 20:42:03,686 - INFO - 크롤링 성공
+2025-10-07 20:42:05,984 - INFO - Native messaging host 시작
+2025-10-07 20:42:05,984 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 20:42:05,985 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 20:42:07,578 - INFO - 크롤링 성공
+2025-10-07 20:42:52,923 - INFO - Native messaging host 시작
+2025-10-07 20:42:52,923 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 20:42:52,924 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 20:42:53,608 - INFO - 크롤링 성공
+2025-10-07 20:43:39,200 - INFO - Native messaging host 시작
+2025-10-07 20:43:39,202 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 20:43:39,202 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 20:43:42,173 - INFO - 크롤링 성공
+2025-10-07 20:44:36,910 - INFO - Native messaging host 시작
+2025-10-07 20:44:36,911 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 20:44:36,912 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 20:44:39,829 - INFO - 크롤링 성공
+2025-10-07 21:48:26,129 - INFO - Native messaging host 시작
+2025-10-07 21:48:26,131 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 21:48:26,131 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 21:48:28,844 - INFO - 크롤링 성공
+2025-10-07 21:48:33,028 - INFO - Native messaging host 시작
+2025-10-07 21:48:33,028 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-07 21:48:33,029 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-07 21:48:35,542 - INFO - 크롤링 성공
+2025-10-08 17:30:26,610 - INFO - Native messaging host 시작
+2025-10-08 17:30:26,612 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 17:30:26,612 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 17:30:31,721 - INFO - 크롤링 성공
+2025-10-08 17:41:20,536 - INFO - Native messaging host 시작
+2025-10-08 17:41:20,537 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 17:41:20,537 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 17:41:24,120 - INFO - 크롤링 성공
+2025-10-08 18:01:49,315 - INFO - Native messaging host 시작
+2025-10-08 18:01:49,316 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 18:01:49,316 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 18:01:52,037 - INFO - 크롤링 성공
+2025-10-08 18:01:52,811 - INFO - Native messaging host 시작
+2025-10-08 18:01:52,812 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 18:01:52,812 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 18:01:55,157 - INFO - 크롤링 성공
+2025-10-08 18:02:57,182 - INFO - Native messaging host 시작
+2025-10-08 18:02:57,182 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 18:02:57,184 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 18:02:59,321 - INFO - 크롤링 성공
+2025-10-08 18:03:36,594 - INFO - Native messaging host 시작
+2025-10-08 18:03:36,594 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 18:03:36,595 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 18:03:38,942 - INFO - 크롤링 성공
+2025-10-08 18:04:46,979 - INFO - Native messaging host 시작
+2025-10-08 18:04:46,979 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 18:04:46,979 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 18:04:48,792 - INFO - 크롤링 성공
+2025-10-08 18:06:26,741 - INFO - Native messaging host 시작
+2025-10-08 18:06:26,741 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 18:06:26,741 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 18:06:28,807 - INFO - 크롤링 성공
+2025-10-08 18:06:32,433 - INFO - Native messaging host 시작
+2025-10-08 18:06:32,434 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 18:06:32,434 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 18:06:34,430 - INFO - 크롤링 성공
+2025-10-08 18:30:10,223 - INFO - Native messaging host 시작
+2025-10-08 18:30:10,230 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-08 18:30:10,232 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py
+2025-10-08 18:30:13,694 - INFO - 크롤링 성공

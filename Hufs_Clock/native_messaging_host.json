@@ -1,9 +1,0 @@
-{
-    "name": "com.hufs.clock.updater",
-    "description": "HUFS Clock Data Updater",
-    "path": "C:\\Users\\samsung\\OneDrive\\바탕 화면\\Hufs_Clock\\native_messaging_host.py",
-    "type": "stdio",
-    "allowed_origins": [
-        "chrome-extension://dclhnnknfekcpoofmogogkaggjikhdkg/"
-    ]
-}
