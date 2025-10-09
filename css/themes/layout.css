@@ -92,3 +92,44 @@ body.theme-dark .background.dark {
     transform: translateY(-5px) scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* 학식 토글 버튼 활성화 상태 */
+.glass-button.active {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* 독립된 학식 토글 버튼 */
+.meal-toggle-btn.floating {
+    position: fixed;
+    top: 30px;
+    right: 210px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 8px;
+    padding: 11px 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.meal-toggle-btn.floating:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 16px rgba(31, 38, 135, 0.5);
+}
+
+.meal-toggle-btn.floating.active {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    transform: translateY(-1px);
+}

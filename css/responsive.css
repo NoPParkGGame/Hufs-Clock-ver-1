@@ -129,6 +129,13 @@
         top: 40px;
         transition: all 0.3s ease;
     }
+    .meal-toggle-btn.floating {
+        right: 160px;
+        top: 20px;
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
 }
 
 /* ===== 모바일 (767px 이하) ===== */

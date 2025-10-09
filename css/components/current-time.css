@@ -6,7 +6,7 @@
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 700;
     margin: 0;
-    font-size: 1.8em !important;
+    font-size: 2em !important;
     color: var(--curtime-color);
     z-index: 1000;      /* 다른 요소들 위에 표시 */
 }
@@ -16,7 +16,7 @@
     top: 45px;          /* label 아래에 위치 */
     left: 30px;         /* 왼쪽 여백 */
     font-weight: 700;
-    font-size: 1.8em !important;
+    font-size: 2em !important;
     color: var(--curtime-color);
     z-index: 1000;      /* 다른 요소들 위에 표시 */
 }

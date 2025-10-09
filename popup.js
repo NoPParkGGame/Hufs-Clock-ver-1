@@ -1,4 +1,5 @@
 let schedule = null; // 학사일정 데이터를 저장할 변수
+let meals = null; // 급식 데이터를 저장할 변수
 
 // --- 전역 함수들 ---
 function parseScheduleDate(dateStr, yearOffset = 0) {
@@ -199,6 +200,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // 학식 토글 버튼 이벤트 리스너 추가
+    const mealToggleBtn = document.getElementById('meal-toggle');
+    if (mealToggleBtn) {
+        mealToggleBtn.addEventListener('click', () => {
+            const mealContainer = document.querySelector('.meal-container');
+            if (mealContainer) {
+                const isHidden = mealContainer.classList.contains('hidden');
+
+                if (isHidden) {
+                    // 급식 표시
+                    mealContainer.classList.remove('hidden');
+                    mealContainer.classList.add('show');
+                    mealToggleBtn.textContent = '🍽️ 학식 숨기기';
+                    mealToggleBtn.classList.add('active');
+                } else {
+                    // 급식 숨기기
+                    mealContainer.classList.remove('show');
+                    mealContainer.classList.add('hidden');
+                    mealToggleBtn.textContent = '🍽️ 학식 보기';
+                    mealToggleBtn.classList.remove('active');
+                }
+            }
+        });
+    }
 });
 
 // 로컬 캐시 데이터 로딩 함수
@@ -213,6 +239,11 @@ async function loadLocalData() {
         const noticeData = await noticeResponse.json();
         const notices = noticeData.notices || [];
         console.log(`공지사항 ${notices.length}개 로드됨`);
+
+        const mealResponse = await fetch(chrome.runtime.getURL('meal_cache.json'), { cache: 'no-cache' });
+        const mealData = await mealResponse.json();
+        meals = mealData.meals || [];
+        console.log(`급식 ${meals.length}개 로드됨`);
 
         const noticeTbody = document.querySelector('.notice-table tbody');
         if (noticeTbody) {
@@ -237,6 +268,32 @@ async function loadLocalData() {
             lastUpdateElement.classList.remove('highlight');
             void lastUpdateElement.offsetWidth;
             lastUpdateElement.classList.add('highlight');
+        }
+
+        // 급식 데이터 표시
+        const mealTbody = document.querySelector('.meal-table tbody');
+        if (mealTbody && meals) {
+            const today = new Date().getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
+            const dayIndex = today === 0 ? 6 : today - 1; // 월(0), 화(1), 수(2), 목(3), 금(4), 토(5), 일(6)
+
+            mealTbody.innerHTML = meals.map(meal => {
+                const todayMenu = meal.menus[dayIndex] || '메뉴 정보 없음';
+                const isAvailable = todayMenu && !todayMenu.includes('등록된 메뉴가 없습니다');
+                const prices = meal.prices[dayIndex] || '';
+
+                return `
+                    <tr class="meal-row ${isAvailable ? '' : 'no-menu'}">
+                        <td class="meal-time-cell">
+                            <div class="meal-content">
+                                <span class="meal-time">⦁ ${meal.time}</span>
+                                <div class="meal-info-row">
+                                    <span class="meal-menu">${isAvailable ? todayMenu : '운영하지 않음'}</span><span class="meal-price">(${isAvailable ? prices : ''})</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         // 타이머 시작

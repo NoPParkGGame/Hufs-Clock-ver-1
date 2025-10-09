@@ -6,6 +6,16 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+# Selenium 추가
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
 def crawl_schedule():
     """학사일정 크롤링"""
     base_url = "https://www.hufs.ac.kr/hufs/index.do#section4"
@@ -141,6 +151,83 @@ def _extract_notice_info(row, domain):
         'link': domain + link if link else ''
     }
 
+
+def crawl_meals():
+    """급식 크롤링 - Selenium 사용"""
+    base_url = "https://www.hufs.ac.kr/hufs/11318/subview.do"
+
+    try:
+        print("급식 크롤링 시작...")
+
+        # Chrome 옵션 설정
+        options = Options()
+        options.add_argument('--headless')  # 브라우저 창 숨기기
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--window-size=1920,1080')
+
+        # ChromeDriver 설정
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
+
+        # 페이지 접속
+        driver.get(base_url)
+
+        # JavaScript 로딩 대기
+        wait = WebDriverWait(driver, 10)
+        menu_div = wait.until(
+            EC.presence_of_element_located((By.ID, "menuTableDiv"))
+        )
+
+        # 추가 대기
+        time.sleep(2)
+
+        # 페이지 소스 파싱
+        page_source = driver.page_source
+        soup = BeautifulSoup(page_source, 'html.parser')
+
+        meal_table = soup.find('div', class_='detail', id='menuTableDiv')
+        if not meal_table:
+            driver.quit()
+            return []
+
+        # tr 태그 파싱
+        meal_rows = meal_table.find_all('tr')
+
+        meals = []
+        for row in meal_rows:
+            th = row.find('th')
+            tds = row.find_all('strong', class_='point')
+            tp = row.find_all('p', class_='pay')
+
+            if th and tds and tp:
+                meal_time = th.get_text(strip=True)
+                # 요일별 메뉴 (월화수목금토일)
+                menus = [td.get_text(strip=True) for td in tds[:7]]
+                # 요일별 가격
+                prices = [p.get_text(strip=True) for p in tp[:7]]
+
+                meals.append({
+                    'time': meal_time,
+                    'menus': menus,
+                    'prices': prices
+                })
+
+        driver.quit()
+        print(f"급식 크롤링 성공: {len(meals)}개 식사 시간대")
+        return meals
+
+    except Exception as e:
+        print(f"급식 크롤링 실패: {e}")
+        try:
+            driver.quit()
+        except:
+            pass
+        return []
+
+
+
 def main():
     try:
         print("HUFS 데이터 크롤링 및 로컬 저장 시작")
@@ -161,6 +248,14 @@ def main():
             'notices': notices
         }
 
+        # 급식 크롤링
+        print("급식 크롤링 중...")
+        meals = crawl_meals()
+        meal_data = {
+            'timestamp': datetime.now().isoformat(),
+            'meals': meals
+        }
+
         # JSON 파일로 저장
         script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -170,15 +265,31 @@ def main():
         with open(os.path.join(script_dir, 'notice_cache.json'), 'w', encoding='utf-8') as f:
             json.dump(notice_data, f, ensure_ascii=False, indent=2)
 
+        with open(os.path.join(script_dir, 'meal_cache.json'), 'w', encoding='utf-8') as f:
+            json.dump(meal_data, f, ensure_ascii=False, indent=2)
+
         print("[SUCCESS] 데이터 저장 완료!")
         print("=== 크롤링된 학사일정 ===")
         print(json.dumps(schedule, ensure_ascii=False, indent=2))
         print(f"\n공지사항: {len(notices)}개 크롤링됨")
         print("=== 크롤링된 공지사항 목록 ===")
+
         for i, notice in enumerate(notices, 1):
             print(f"{i}. [{notice['date']}] {notice['title']}")
             print(f"   작성자: {notice.get('writer', 'N/A')}")
             print(f"   링크: {notice['link']}")
+            print("")
+        
+        print(f"\n급식: {len(meals)}개 식사 시간대 크롤링됨")
+        print("=== 크롤링된 급식 목록 ===")
+        for i, meal in enumerate(meals, 1):
+            print(f"{i}. {meal['time']}")
+            days = ['월', '화', '수', '목', '금', '토', '일']
+
+            for j, (menu, price) in enumerate(zip(meal['menus'][:7], meal['prices'][:7])):
+                if menu and '등록된 메뉴가 없습니다' not in menu and price:
+                    print(f"   {days[j]}: {menu[:30]} ({price})")
+            
             print("")
     except Exception as e:
         print(f"크롤링 중 오류 발생: {e}")
