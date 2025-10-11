@@ -2,7 +2,7 @@
 
 .timer {
     position: fixed;  /* 또는 absolute, relative */
-    bottom: 40px;      /* 상단에서의 거리 */
+    bottom: 30px;      /* 상단에서의 거리 */
     right: 40px;    /* 우측에서의 거리 */
     font-weight: 900;
     font-size: 4.5em;
@@ -20,7 +20,7 @@
     color: rgba(255, 255, 255, 0.9);  /* 흰색으로 변경 */
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
     right: 40px;
-    bottom: 120px;
+    bottom: 100px;
 }
 
 .period-type, .timer {

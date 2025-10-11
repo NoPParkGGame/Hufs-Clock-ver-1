@@ -43,16 +43,20 @@ def main():
         message = read_message()
         logging.info(f"메시지 수신: {message}")
         
-        # 메시지 처리 (현재는 크롤링 명령만 가정)
-        # send_message({"status": "크롤링 시작"})
-        # logging.info("크롤링 시작 메시지 전송")
+        # 메시지 처리
+        action = message.get('action', 'update_cache')
+        
+        if action == 'update_notices':
+            script_args = ['notices']
+        else:
+            script_args = []  # 전체 크롤링
         
         # 크롤링 실행
         script_dir = os.path.dirname(os.path.abspath(__file__))
         update_script = os.path.join(script_dir, 'update_cache.py')
-        logging.info(f"크롤링 스크립트 실행: {update_script}")
+        logging.info(f"크롤링 스크립트 실행: {update_script} with args: {script_args}")
 
-        result = subprocess.run([sys.executable, update_script],
+        result = subprocess.run([sys.executable, update_script] + script_args,
                               capture_output=True, text=True, cwd=script_dir, encoding='cp949', errors='replace')
 
         if result.returncode == 0:
@@ -71,7 +75,7 @@ def main():
 
     except Exception as e:
         logging.error(f"예상치 못한 오류: {str(e)}")
-        send_message({"error": f"예상치 못한 오류: {str(e)}"})
+        send_message({"success": False, "error": f"예상치 못한 오류: {str(e)}"})
 
 if __name__ == "__main__":
     main()

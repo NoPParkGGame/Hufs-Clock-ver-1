@@ -120,3 +120,23 @@
 .theme-dark .meal-row:hover {
     background-color: rgba(255, 255, 255, 0.05);
 }
+
+/* 스크롤바 투명화 */
+.meal-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.meal-container::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 20px 0;
+}
+
+.meal-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    background: transparent;
+}
+
+.meal-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}

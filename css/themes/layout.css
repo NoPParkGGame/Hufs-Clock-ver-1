@@ -45,18 +45,6 @@ body.theme-dark .background.dark {
 
 
 /* --- 버튼 스타일 리팩토링 --- */
-/* 1. 버튼들을 감싸는 컨테이너 스타일 (Flexbox 사용) */
-.button-container {
-    position: fixed;
-    bottom: 40px;
-    right: 625px; /* 컨테이너의 위치만 지정 */
-    z-index: 1000;
-    
-    display: flex; /* Flexbox 레이아웃 적용 */
-    gap: 15px; /* 버튼 사이의 간격을 15px로 균일하게 설정 */
-    flex-direction: row-reverse; /* 버튼 순서를 오른쪽부터 (종정시, 홈페이지...) */
-}
-
 /* 2. 모든 버튼의 공통 스타일 (중복 제거) */
 .glass-button {
     /* 기본 모양 및 크기 */
@@ -84,6 +72,35 @@ body.theme-dark .background.dark {
     transition: all 0.3s ease;
 }
 
+/* 개별 버튼 위치 설정 (컨테이너에서 분리) - 큰 버튼용, 필요 시 사용 */
+.library-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 625px;
+    z-index: 1000;
+}
+
+.eclass-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 720px;
+    z-index: 1000;
+}
+
+.homepage-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 815px;
+    z-index: 1000;
+}
+
+.jungsi-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 910px;
+    z-index: 1000;
+}
+
 /* 3. 모든 버튼의 공통 호버(hover) 효과 */
 .glass-button:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -92,6 +109,68 @@ body.theme-dark .background.dark {
     transform: translateY(-5px) scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+/* 팝업 효과: hidden 클래스 시 사라짐 */
+.glass-button.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+    transition: all 0.1s ease;
+}
+
+/* 작은 바로가기 버튼 스타일 (바로가기 버튼과 동일) */
+.small-glass-button {
+    position: fixed;
+    top: 30px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 8px;
+    padding: 11px 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    height: 45px;
+}
+
+/* 작은 버튼 위치 설정 (바로가기 버튼 왼쪽으로 펼쳐짐) */
+.jungsi-btn {
+    right: 465px; /* 바로가기 버튼 왼쪽, 간격 10px */
+}
+
+.homepage-btn {
+    right: 550px; /* jungsi-btn 왼쪽 */
+}
+
+.eclass-btn {
+    right: 650px; /* homepage-btn 왼쪽 */
+}
+
+.library-btn {
+    right: 750px; /* eclass-btn 왼쪽 */
+}
+
+/* 작은 버튼 호버 효과 */
+.small-glass-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 16px rgba(31, 38, 135, 0.5);
+}
+
+/* 작은 버튼 hidden 효과 (오른쪽에서 왼쪽으로 슬라이드) */
+.small-glass-button.hidden {
+    opacity: 0;
+    transform: translateX(5px);
+    pointer-events: none;
+}
+
 
 /* 학식 토글 버튼 활성화 상태 */
 .glass-button.active {
@@ -129,6 +208,40 @@ body.theme-dark .background.dark {
 }
 
 .meal-toggle-btn.floating.active {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    transform: translateY(-1px);
+}
+
+/* 바로가기 토글 버튼 (학식 버튼 왼쪽에 위치) */
+.shortcut-toggle-btn.floating {
+    position: fixed;
+    top: 30px;
+    right: 340px; /* 학식 버튼 right: 210px + 버튼 너비 ≈102px + 간격 20px */
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 8px;
+    padding: 11px 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.shortcut-toggle-btn.floating:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 16px rgba(31, 38, 135, 0.5);
+}
+
+.shortcut-toggle-btn.floating.active {
     background: rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     transform: translateY(-1px);

@@ -9,7 +9,7 @@ chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.create({ url: url });
 });
 
-// Native messaging으로 데이터 업데이트
+// Native messaging으로 전체 데이터 업데이트
 function updateCacheData() {
     return new Promise((resolve, reject) => {
         chrome.runtime.sendNativeMessage(
@@ -20,7 +20,29 @@ function updateCacheData() {
                     console.error('Native messaging error:', chrome.runtime.lastError);
                     reject(chrome.runtime.lastError);
                 } else {
-                    console.log('크롤링 응답:', response);
+                    console.log('전체 크롤링 응답:', response);
+                    if (response.output) {
+                        console.log('크롤링 출력:', response.output);
+                    }
+                    resolve(response);
+                }
+            }
+        );
+    });
+}
+
+// Native messaging으로 공지사항 데이터 업데이트
+function updateNoticesData() {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendNativeMessage(
+            'com.hufs.clock.updater',
+            { action: 'update_notices' },
+            (response) => {
+                if (chrome.runtime.lastError) {
+                    console.error('Native messaging error:', chrome.runtime.lastError);
+                    reject(chrome.runtime.lastError);
+                } else {
+                    console.log('공지사항 크롤링 응답:', response);
                     if (response.output) {
                         console.log('크롤링 출력:', response.output);
                     }
@@ -35,6 +57,16 @@ function updateCacheData() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'update_cache') {
         updateCacheData()
+            .then((result) => {
+                sendResponse({ success: true, data: result });
+            })
+            .catch((error) => {
+                sendResponse({ success: false, error: error.message });
+            });
+        return true;
+    }
+    if (request.action === 'update_notices') {
+        updateNoticesData()
             .then((result) => {
                 sendResponse({ success: true, data: result });
             })

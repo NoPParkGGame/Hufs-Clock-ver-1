@@ -31,17 +31,20 @@
     <!-- 학식 토글 버튼 (독립 위치) -->
     <button class="meal-toggle-btn floating" id="meal-toggle">🍽️ 학식 보기</button>
 
-    <!-- 메인 컨테이너 - 종강까지 남은 시간 표시 -->
-    <span id="period-type" class="period-type">계산 중...</span>
-    <span id="countdown-timer" class="timer">
+    <!-- 바로가기 토글 버튼 (학식 버튼 왼쪽) -->
+    <button class="shortcut-toggle-btn floating" id="shortcut-toggle">🔗 바로가기</button>
+
+    <!-- 메인 컨테이너 - 종강까지 남은 시간 표시-->
+     <span id="period-type" class="period-type">계산 중... </span>
+     <span id="countdown-timer" class="timer">
         -일 -시간 -분 -초
     </span>
-    <div class="button-container">
-        <button class="glass-button" data-url="http://wis.hufs.ac.kr/src08/jsp/index.jsp">종정시</button>
-        <button class="glass-button" data-url="http://www.hufs.ac.kr/">홈페이지</button>
-        <button class="glass-button" data-url="https://eclass.hufs.ac.kr/">이클래스</button>
-        <button class="glass-button" data-url="https://library.hufs.ac.kr/">도서관</button>
-    </div>
+
+    <!-- 바로가기 버튼들 (토글 시 왼쪽으로 펼쳐짐) -->
+    <button class="small-glass-button jungsi-btn hidden" data-url="http://wis.hufs.ac.kr/src08/jsp/index.jsp">종정시</button>
+    <button class="small-glass-button homepage-btn hidden" data-url="http://www.hufs.ac.kr/">홈페이지</button>
+    <button class="small-glass-button eclass-btn hidden" data-url="https://eclass.hufs.ac.kr/">이클래스</button>
+    <button class="small-glass-button library-btn hidden" data-url="https://library.hufs.ac.kr/">도서관</button>
     
     <!-- 공지사항 섹션 (좌측 하단 고정) -->
     <div class="notice-container">

@@ -1,14 +1,6 @@
 /* 반응형 디자인 - 표준 브레이크포인트 기반 */
 
 
-@media screen and (max-width: 1520px) {
-    .button-container {
-        right: 45px;
-        bottom: 30%;
-        transition: all 0.3s ease;
-    }
-} 
-
 /* ===== 데스크톱 (1200px 이상) ===== */
 @media screen and (min-width: 1200px) {
     /* 시간 표시 영역 */
@@ -113,10 +105,14 @@
     /* 카운트다운 타이머 */
     #countdown-timer {
         font-size: 3em;
+        right: 20px;
+        bottom: 25px;
     }
 
     #period-type {
         font-size: 2.8em;
+        bottom: 70px;
+        right: 20px;
     }
 
     .button-container {
@@ -136,9 +132,57 @@
         font-size: 14px;
     }
 
+    .meal-container {
+        width: 280px !important;
+        font-size: 0.9em;
+        right: 20px !important;
+        top: 150px !important;
+    }
+
+    .shortcut-toggle-btn.floating {
+        right: 285px;
+        top: 20px;
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .small-glass-button {
+        padding: 8px 12px;
+        font-size: 14px;
+        height: 37px;
+    }
+
+    .jungsi-btn {
+        right: 405px; /* 바로가기 버튼 왼쪽, 간격 10px  원래 465*/
+        top: 20px;
+    }
+
+    .homepage-btn {
+        right: 480px; /* jungsi-btn 왼쪽 */
+        top: 20px;
+    }
+
+    .eclass-btn {
+        right: 570px; /* homepage-btn 왼쪽 */
+        top: 20px;
+    }
+
+    .library-btn {
+        right: 660px; /* eclass-btn 왼쪽 */
+        top: 20px;
+    }
+
+    .notice-title-text {
+        max-width: 320px;
+    }
+
+    #last-update {
+        left: 170px;
+        top: 25px;
+    }
 }
 
-/* ===== 모바일 (767px 이하) ===== */
+/* ===== 모바일 (767.99px 이하) ===== */
 @media screen and (max-width: 877px) {
     /* 시간 표시 영역 */
     .current-time-label {
@@ -175,23 +219,26 @@
 
     /* 공지사항 요소 */
     .notice-title {
-        font-size: 1em;
+        font-size: 1.5em !important;
     }
 
     .notice-table th,
     .notice-table td {
         padding: 8px;
-        font-size: 0.9em;
+        font-size: 0.8em;
     }
 
     /* 카운트다운 타이머 */
     #countdown-timer {
         font-size: 2.5em;
+        bottom: 20px;
+        right: 20px;
     }
 
     #period-type {
         font-size: 2.3em;
-        bottom: 80px;
+        bottom: 60px;
+        right: 20px;
     }
 
     /* 새로고침 버튼 */
@@ -206,6 +253,93 @@
         bottom: 20%;
         transition: all 0.3s ease;
     }
+
+    .meal-toggle-btn.floating {
+        right: 125px;
+        top: 15px;
+        padding: 6px 16px;
+        font-size: 12px;
+    }
+
+    .meal-container {
+        width: 230px !important;
+        font-size: 0.8em;
+        right: 20px !important;
+        top: 170px !important;
+    }
+
+        .shortcut-toggle-btn.floating {
+        right: 235px;
+        top: 15px;
+        padding: 6px 16px;
+        font-size: 12px;
+    }
+
+    .small-glass-button {
+        padding: 6px 12px;
+        font-size: 12px;
+        height: 30px;
+    }
+
+    .jungsi-btn {
+        right: 15px; /* 바로가기 버튼 왼쪽, 간격 10px  원래 465*/
+        top: 50px;
+    }
+
+    .homepage-btn {
+        right: 80px; /* jungsi-btn 왼쪽 */
+        top: 50px;
+    }
+
+    .eclass-btn {
+        right: 155px; /* homepage-btn 왼쪽 */
+        top: 50px;
+    }
+
+    .library-btn {
+        right: 230px; /* eclass-btn 왼쪽 */
+        top: 50px;
+    }
+
+    .notice-header {
+        padding: 0px 0; /* 헤더 패딩 축소 */
+        margin-top: 0px; /* 헤더 위쪽 여백 축소 */
+        margin-bottom: 0px; /* 헤더 아래쪽 여백 축소 */
+    }
+
+    .notice-content {
+        align-items: center; /* 제목과 날짜를 행 중앙에 정렬 */
+        text-align: center; /* 텍스트 중앙 정렬 */
+    }
+ 
+    .notice-date {
+        text-align: center;
+        min-width: auto; /* 최소 너비 제거로 중앙 정렬 유연하게 */
+    }
+
+    .refresh-btn {
+        font-size: 0.1em ;
+    }
+
+    #last-update {
+        font-size: 8px;
+        left: 140px;
+        top: 22px;
+    }
+    .notice-content {
+        align-items: center; /* 제목과 날짜를 행 중앙에 정렬 */
+        text-align: center; /* 텍스트 중앙 정렬 */
+    }
+
+    .notice-date {
+        text-align: center;
+        min-width: auto; /* 최소 너비 제거로 중앙 정렬 유연하게 */
+    }
+
+    .notice-title-text {
+        max-width: 240px;  /* 모바일에서는 더 작게 제한 */
+    }
+
 }
 
 /* ===== 일반 반응형 규칙 ===== */
@@ -240,4 +374,5 @@
     #currentTime {
         font-weight: 500;
     }
+}
 

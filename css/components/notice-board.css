@@ -22,13 +22,14 @@
 /* 스크롤바 기본 스타일 */
 .notice-container::-webkit-scrollbar {
     width: 8px;
+    height: 0px;
     background-color: transparent;
 }
 
 /* 스크롤바 트랙 */
 .notice-container::-webkit-scrollbar-track {
     background: transparent;
-    margin: 20px 0;
+    margin: 20px 20px 0 0;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);  /* 트랙도 동일한 모션 곡선 적용 */
 }
 
@@ -199,13 +200,6 @@
     border-radius: 8px;
 }
 
-/* 모바일 화면에서의 너비 조정을 위한 미디어 쿼리 추가 */
-@media screen and (max-width: 480px) {
-    .notice-title-text {
-        max-width: 200px;  /* 모바일에서는 더 작게 제한 */
-    }
-}
-
 /* 헤더 스타일 */
 .notice-header {
     display: flex;
@@ -227,7 +221,7 @@
     font-weight: 700;
     position: absolute;  /* 절대 위치 설정 */
     left: 373px;  /* 위치 조정 */
-    top: 14px;    /* 위치 조정 */
+    top: 19px;    /* 위치 조정 */
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -248,7 +242,7 @@
     color: rgba(255, 255, 255, 0.7);
     position: absolute;
     left: 160px;
-    top: 20px;
+    top: 25px;
     transition: all 0.3s ease;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.2); 
 }
@@ -267,3 +261,5 @@
         opacity: 1;
     }
 }
+
+
