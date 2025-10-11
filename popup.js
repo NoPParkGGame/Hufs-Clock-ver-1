@@ -1,9 +1,6 @@
 let schedule = null; // 학사일정 데이터를 저장할 변수
 let meals = null; // 급식 데이터를 저장할 변수
 
-// 상수 정의
-const CACHE_MAX_AGE_MS = 12 * 60 * 60 * 1000; // 12시간 (밀리초)
-
 // --- 전역 함수들 ---
 function parseScheduleDate(dateStr, yearOffset = 0) {
     const currentYear = new Date().getFullYear() + yearOffset;
@@ -260,8 +257,8 @@ async function loadLocalData() {
         const noticeTimestamp = new Date(noticeData.timestamp || 0);
         const mealTimestamp = new Date(mealData.timestamp || 0);
         
-        const cacheExpiryTime = new Date(now.getTime() - CACHE_MAX_AGE_MS);
-        const isCacheValid = scheduleTimestamp > cacheExpiryTime && noticeTimestamp > cacheExpiryTime && mealTimestamp > cacheExpiryTime;
+        const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+        const isCacheValid = scheduleTimestamp > twelveHoursAgo && noticeTimestamp > twelveHoursAgo && mealTimestamp > twelveHoursAgo;
         
         if (!isCacheValid) {
             console.log("캐시가 오래되었어 전체 크롤링을 시작합니다.");
@@ -281,24 +278,16 @@ async function loadLocalData() {
 
         const noticeTbody = document.querySelector('.notice-table tbody');
         if (noticeTbody) {
-            // DocumentFragment로 DOM 조작 최적화
-            const fragment = document.createDocumentFragment();
-            notices.slice(0, 10).forEach(notice => {
-                const tr = document.createElement('tr');
-                tr.className = 'notice-row';
-                tr.setAttribute('data-link', notice.link);
-                tr.innerHTML = `
+            noticeTbody.innerHTML = notices.slice(0, 20).map(notice => `
+                <tr class="notice-row" data-link="${notice.link}">
                     <td class="notice-title-cell">
                         <div class="notice-content">
                             <span class="notice-date">${notice.date}</span>
                             <span class="notice-title-text">${notice.title}</span>
                         </div>
                     </td>
-                `;
-                fragment.appendChild(tr);
-            });
-            noticeTbody.innerHTML = '';
-            noticeTbody.appendChild(fragment);
+                </tr>
+            `).join('');
         }
 
         const lastUpdateElement = document.getElementById('last-update');
@@ -322,29 +311,24 @@ async function loadLocalData() {
             const today = new Date().getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
             const dayIndex = today === 0 ? 6 : today - 1; // 월(0), 화(1), 수(2), 목(3), 금(4), 토(5), 일(6)
 
-            // DocumentFragment로 DOM 조작 최적화
-            const fragment = document.createDocumentFragment();
-            meals.forEach(meal => {
+            mealTbody.innerHTML = meals.map(meal => {
                 const todayMenu = meal.menus[dayIndex] || '메뉴 정보 없음';
                 const isAvailable = todayMenu && !todayMenu.includes('등록된 메뉴가 없습니다');
                 const prices = meal.prices[dayIndex] || '';
 
-                const tr = document.createElement('tr');
-                tr.className = `meal-row ${isAvailable ? '' : 'no-menu'}`;
-                tr.innerHTML = `
-                    <td class="meal-time-cell">
-                        <div class="meal-content">
-                            <span class="meal-time">⦁ ${meal.time}</span>
-                            <div class="meal-info-row">
-                                <span class="meal-menu">${isAvailable ? todayMenu : '운영하지 않음'}</span><span class="meal-price">(${isAvailable ? prices : ''})</span>
+                return `
+                    <tr class="meal-row ${isAvailable ? '' : 'no-menu'}">
+                        <td class="meal-time-cell">
+                            <div class="meal-content">
+                                <span class="meal-time">⦁ ${meal.time}</span>
+                                <div class="meal-info-row">
+                                    <span class="meal-menu">${isAvailable ? todayMenu : '운영하지 않음'}</span><span class="meal-price">(${isAvailable ? prices : ''})</span>
+                                </div>
                             </div>
-                        </div>
-                    </td>
+                        </td>
+                    </tr>
                 `;
-                fragment.appendChild(tr);
-            });
-            mealTbody.innerHTML = '';
-            mealTbody.appendChild(fragment);
+            }).join('');
         }
 
         // 타이머 시작
@@ -401,70 +385,9 @@ function mockLoadData() {
     }
 }
 
-// 이벤트 리스너 설정 (이벤트 위임으로 최적화)
-document.addEventListener('DOMContentLoaded', () => {
-    // 공지사항 클릭 이벤트 위임
-    document.querySelector('.notice-table tbody').addEventListener('click', (e) => {
-        const row = e.target.closest('.notice-row');
-        if (row) {
-            const link = row.getAttribute('data-link');
-            if (link && link !== '#') {
-                chrome.tabs.create({ url: link });
-            }
-        }
-    });
+// 전역 함수 등록
+window.changeTheme = changeTheme;
 
-    // 급식 토글 버튼
-    const mealToggleBtn = document.getElementById('meal-toggle');
-    if (mealToggleBtn) {
-        mealToggleBtn.addEventListener('click', () => {
-            const mealContainer = document.querySelector('.meal-container');
-            if (mealContainer) {
-                const isHidden = mealContainer.classList.contains('hidden');
-                if (isHidden) {
-                    mealContainer.classList.remove('hidden');
-                    mealToggleBtn.textContent = '급식 ▲';
-                } else {
-                    mealContainer.classList.add('hidden');
-                    mealToggleBtn.textContent = '급식 ▼';
-                }
-            }
-        });
-    }
-
-    // 새로고침 버튼
-    const refreshBtn = document.querySelector('.refresh-btn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', async () => {
-            console.log("새로고침 버튼 클릭됨");
-
-            // 크롤링 시작 시 메시지 변경
-            const lastUpdateElement = document.getElementById('last-update');
-            if (lastUpdateElement) {
-                lastUpdateElement.textContent = "업데이트 중...";
-            }
-
-            try {
-                const response = await chrome.runtime.sendMessage({ action: 'update_notices' });
-                if (response && response.success) {
-                    console.log("크롤링 성공");
-                    await loadLocalData();
-                } else {
-                    console.log("크롤링 실패:", response ? response.error : "응답 없음");
-                    await loadLocalData();
-                }
-            } catch (error) {
-                console.log("크롤링 실패:", error.message);
-                await loadLocalData();
-            }
-        });
-    }
-
-    // 데이터 로드
-    loadLocalData();
-});
-
-// 단축키 토글 버튼
 document.getElementById('shortcut-toggle').addEventListener('click', () => {
     const buttons = document.querySelectorAll('.small-glass-button');
     buttons.forEach(btn => btn.classList.toggle('hidden'));

@@ -333,7 +333,6 @@
 
     .notice-date {
         text-align: center;
-        min-width: auto; /* 최소 너비 제거로 중앙 정렬 유연하게 */
     }
 
     .notice-title-text {

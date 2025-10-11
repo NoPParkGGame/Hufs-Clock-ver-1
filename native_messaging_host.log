@@ -580,3 +580,15 @@
 2025-10-11 20:09:34,433 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py with args: ['notices']
 2025-10-11 20:09:35,778 - INFO - 크롤링 성공
 2025-10-11 20:11:53,230 - ERROR - 예상치 못한 오류: cannot read more than 33554432 bytes
+2025-10-11 20:19:33,039 - INFO - Native messaging host 시작
+2025-10-11 20:19:33,040 - INFO - 메시지 수신: {'action': 'update_notices'}
+2025-10-11 20:19:33,040 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py with args: ['notices']
+2025-10-11 20:19:34,234 - INFO - 크롤링 성공
+2025-10-11 20:20:11,131 - INFO - Native messaging host 시작
+2025-10-11 20:20:11,131 - INFO - 메시지 수신: {'action': 'update_notices'}
+2025-10-11 20:20:11,131 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py with args: ['notices']
+2025-10-11 20:20:12,344 - INFO - 크롤링 성공
+2025-10-11 20:29:59,333 - INFO - Native messaging host 시작
+2025-10-11 20:29:59,334 - INFO - 메시지 수신: {'action': 'update_notices'}
+2025-10-11 20:29:59,334 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py with args: ['notices']
+2025-10-11 20:30:01,351 - INFO - 크롤링 성공

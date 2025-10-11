@@ -27,7 +27,7 @@ HEADERS = {
 }
 DEFAULT_SCHEDULE = {
     'first_start': "03.04",
-    'first_end': "06.20", 
+    'first_end': "06.20",
     'second_start': "09.01",
     'second_end': "12.19"
 }
@@ -36,10 +36,13 @@ def crawl_schedule():
     """학사일정 크롤링"""
     base_url = "https://www.hufs.ac.kr/hufs/index.do#section4"
     domain = "https://www.hufs.ac.kr"
-    
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    }
+
     try:
         # 메인 페이지에서 학사일정 링크 추출
-        response = requests.get(base_url, headers=HEADERS)
+        response = requests.get(base_url, headers=headers)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         
@@ -49,7 +52,7 @@ def crawl_schedule():
 
         # 학사일정 페이지 크롤링
         schedule_url = domain + schedule_link['href']
-        schedule_response = requests.get(schedule_url, headers=HEADERS)
+        schedule_response = requests.get(schedule_url, headers=headers)
         schedule_response.raise_for_status()
         
         schedule_soup = BeautifulSoup(schedule_response.text, 'html.parser')
@@ -66,8 +69,12 @@ def crawl_schedule():
     except Exception as e:
         print(f"학사일정 크롤링 실패: {e}")
         # 기본 일정 반환
-        return DEFAULT_SCHEDULE
-
+        return {
+            'first_start': "03.04",
+            'first_end': "06.20",
+            'second_start': "09.01",
+            'second_end': "12.19"
+        }
 
 def _extract_schedule_dates(content_list):
     """
@@ -101,7 +108,7 @@ def _extract_schedule_dates(content_list):
     return schedule_dates
 
 def crawl_notices():
-    """공지사항 크롤링"""
+    """일반 공지사항 크롤링"""
     base_url = "https://www.hufs.ac.kr/hufs/11281/subview.do"
     domain = "https://www.hufs.ac.kr"
 
@@ -121,11 +128,40 @@ def crawl_notices():
             if notice_info:
                 notices.append(notice_info)
         
-        print("공지사항 크롤링 성공")
+        print("일반 공지사항 크롤링 성공")
         return notices
 
     except requests.RequestException as e:
-        print(f"공지사항 크롤링 실패: {e}")
+        print(f"일반 공지사항 크롤링 실패: {e}")
+        return []
+
+
+def crawl_haksa_notices():
+    """학사 공지사항 크롤링"""
+    base_url = "https://www.hufs.ac.kr/hufs/11282/subview.do"
+    domain = "https://www.hufs.ac.kr"
+
+    try:
+        # 학사 공지사항 페이지 요청
+        response = requests.get(base_url, headers=HEADERS)
+        response.raise_for_status()
+        
+        # HTML 파싱
+        soup = BeautifulSoup(response.text, 'html.parser')
+        notice_rows = soup.find_all('tr', class_='')
+        
+        # 공지사항 정보 추출
+        notices = []
+        for row in notice_rows[:10]:  # 최근 10개
+            notice_info = _extract_notice_info(row, domain)
+            if notice_info:
+                notices.append(notice_info)
+        
+        print("학사 공지사항 크롤링 성공")
+        return notices
+
+    except requests.RequestException as e:
+        print(f"학사 공지사항 크롤링 실패: {e}")
         return []
 
 def _extract_notice_info(row, domain):
@@ -264,19 +300,38 @@ def main():
         
         # 명령줄 인자 확인
         if len(sys.argv) > 1 and sys.argv[1] == 'notices':
-            # 공지사항만 크롤링
-            notices = crawl_notices()
+            # 일반 공지사항과 학사 공지사항 모두 크롤링
+            general_notices = crawl_notices()
+            haksa_notices = crawl_haksa_notices()
+            
+            # 공지사항 합치기
+            all_notices = general_notices + haksa_notices
+            
+            # 날짜로 내림차순 정렬 (최신 날짜가 위로)
+            def parse_date(date_str):
+                try:
+                    month, day = map(int, date_str.split('.'))
+                    # 올해 연도를 가정하고 datetime 객체 생성
+                    current_year = datetime.now().year
+                    return datetime(current_year, month, day)
+                except:
+                    return datetime.min  # 파싱 실패 시 가장 오래된 것으로 처리
+            
+            all_notices.sort(key=lambda x: parse_date(x['date']), reverse=True)
+            
+            # 상위 20개만 저장 (일반 10개 + 학사 10개)
+            all_notices = all_notices[:20]
             
             notice_data = {
                 'timestamp': datetime.now().isoformat(),
-                'notices': notices
+                'notices': all_notices
             }
             
             # JSON 파일로 저장
             with open(os.path.join(script_dir, 'notice_cache.json'), 'w', encoding='utf-8') as f:
                 json.dump(notice_data, f, ensure_ascii=False, indent=2)
             
-            print(f"공지사항: {len(notices)}개 업데이트됨")
+            print(f"공지사항 업데이트 완료: 일반 {len(general_notices)}개, 학사 {len(haksa_notices)}개, 총 {len(all_notices)}개 저장")
             return
         
         # 캐시 유효성 확인
@@ -286,7 +341,7 @@ def main():
             os.path.join(script_dir, 'meal_cache.json')
         ]
         
-        all_cache_valid = all(is_cache_valid(cache_file, max_age_hours=CACHE_MAX_AGE_HOURS) for cache_file in cache_files)
+        all_cache_valid = all(is_cache_valid(cache_file, max_age_hours=12) for cache_file in cache_files)
         
         if all_cache_valid:
             print("모든 캐시가 유효합니다. 크롤링을 건너뜁니다.")
