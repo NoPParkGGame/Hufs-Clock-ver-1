@@ -141,7 +141,7 @@ function changeTheme(theme) {
 
 document.addEventListener('DOMContentLoaded', () => {
     // 로컬 캐시 데이터 로드
-    console.log("로컬 캐시 데이터 로드");
+    console.log("[POPUP] 로컬 캐시 로드 중");
     loadLocalData();
     
     // 테마 초기화 (즉시 적용)
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const refreshBtn = document.querySelector('.refresh-btn');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', async () => {
-            console.log("새로고침 버튼 클릭됨");
+            console.log("[POPUP] 새로고침 버튼 클릭됨");
 
             // 크롤링 시작 시 메시지 변경
             const lastUpdateElement = document.getElementById('last-update');
@@ -194,14 +194,14 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await chrome.runtime.sendMessage({ action: 'update_notices' });
                 if (response && response.success) {
-                    console.log("크롤링 성공");
-                    await loadLocalData();
+                    console.log("[POPUP] 크롤링: 성공");
+                    await loadLocalData(true); // 크롤링된 신규 데이터임을 표시
                 } else {
-                    console.log("크롤링 실패:", response ? response.error : "응답 없음");
+                    console.log("[POPUP] 크롤링: 실패 -", response ? response.error : "응답 없음");
                     await loadLocalData();
                 }
             } catch (error) {
-                console.log("크롤링 실패:", error.message);
+                console.log("[POPUP] 크롤링: 실패 -", error.message);
                 await loadLocalData();
             }
         });
@@ -234,45 +234,43 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 로컬 캐시 데이터 로딩 함수
-async function loadLocalData() {
+async function loadLocalData(isFromCrawling = false) {
     try {
         const scheduleResponse = await fetch(chrome.runtime.getURL('schedule_cache.json'), { cache: 'no-cache' });
         const scheduleData = await scheduleResponse.json();
         schedule = scheduleData.schedule;
-        console.log("학사일정 로드됨:", schedule);
+        console.log(`[POPUP] ${isFromCrawling ? '신규 크롤링' : '캐시'} 학사일정 로드됨`);
 
         const noticeResponse = await fetch(chrome.runtime.getURL('notice_cache.json'), { cache: 'no-cache' });
         const noticeData = await noticeResponse.json();
         const notices = noticeData.notices || [];
-        console.log(`공지사항 ${notices.length}개 로드됨`);
+        console.log(`[POPUP] ${isFromCrawling ? '신규 크롤링' : '캐시'} 공지사항 로드됨: ${notices.length}개`);
 
         const mealResponse = await fetch(chrome.runtime.getURL('meal_cache.json'), { cache: 'no-cache' });
         const mealData = await mealResponse.json();
         meals = mealData.meals || [];
-        console.log(`학식 ${meals.length}개 로드됨`);
+        console.log(`[POPUP] ${isFromCrawling ? '신규 크롤링' : '캐시'} 학식 로드됨: ${meals.length}개`);
 
-        // 캐시 유효성 확인 (12시간 이내)
+        // 캐시 유효성 확인 (12시간마다 크롤링)
         const now = new Date();
-        const scheduleTimestamp = new Date(scheduleData.timestamp || 0);
-        const noticeTimestamp = new Date(noticeData.timestamp || 0);
-        const mealTimestamp = new Date(mealData.timestamp || 0);
-        
-        const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000);
-        const isCacheValid = scheduleTimestamp > twelveHoursAgo && noticeTimestamp > twelveHoursAgo && mealTimestamp > twelveHoursAgo;
-        
-        if (!isCacheValid) {
-            console.log("캐시가 오래되었어 전체 크롤링을 시작합니다.");
+        const lastUpdate = localStorage.getItem('last_update');
+        const shouldUpdate = !lastUpdate || (now - new Date(lastUpdate)) > 12 * 60 * 60 * 1000; // 12시간
+
+        if (shouldUpdate) {
+            console.log("[POPUP] 캐시 만료됨, 전체 크롤링 시작");
+            localStorage.setItem('last_update', now.toISOString());
+
             // 백그라운드에서 크롤링 시작 (UI 블로킹 방지)
             chrome.runtime.sendMessage({ action: 'update_cache' }).then((response) => {
                 if (response && response.success) {
-                    console.log("백그라운드 크롤링 성공");
-                    // 크롤링 완료 후 데이터 재로드
-                    setTimeout(() => loadLocalData(), 1000);
+                    console.log("[POPUP] 백그라운드 크롤링: 성공");
+                    // 크롤링 완료 후 데이터 재로드 (약간의 지연을 주어 파일이 확실히 저장되도록)
+                    setTimeout(() => loadLocalData(true), 2000); // 크롤링된 신규 데이터임을 표시
                 } else {
-                    console.log("백그라운드 크롤링 실패");
+                    console.log("[POPUP] 백그라운드 크롤링: 실패");
                 }
             }).catch((error) => {
-                console.log("크롤링 메시지 전송 실패:", error);
+                console.log("[POPUP] 크롤링 메시지 전송 실패:", error);
             });
         }
 
@@ -293,8 +291,12 @@ async function loadLocalData() {
         const lastUpdateElement = document.getElementById('last-update');
         if (lastUpdateElement) {
             // 캐시가 유효하면 타임스탬프 표시, 아니면 업데이트 중 표시
-            if (isCacheValid) {
-                const latestTimestamp = new Date(Math.max(scheduleTimestamp, noticeTimestamp, mealTimestamp));
+            if (!shouldUpdate) {
+                const latestTimestamp = new Date(Math.max(
+                    new Date(scheduleData.timestamp || 0),
+                    new Date(noticeData.timestamp || 0),
+                    new Date(mealData.timestamp || 0)
+                ));
                 lastUpdateElement.textContent = `최근 업데이트: ${latestTimestamp.toLocaleString('ko-KR')}`;
             } else {
                 lastUpdateElement.textContent = "업데이트 중...";
@@ -331,9 +333,11 @@ async function loadLocalData() {
             }).join('');
         }
 
-        // 타이머 시작
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+        // 타이머 시작 (한 번만)
+        if (!window.countdownInterval) {
+            updateCountdown();
+            window.countdownInterval = setInterval(updateCountdown, 1000);
+        }
 
     } catch (error) {
         console.error("로컬 데이터 로드 실패:", error);
@@ -351,9 +355,11 @@ function mockLoadData() {
         second_end: "12.20"
     };
 
-    // 타이머 시작
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    // 타이머 시작 (한 번만)
+    if (!window.countdownInterval) {
+        updateCountdown();
+        window.countdownInterval = setInterval(updateCountdown, 1000);
+    }
 
     // Mock 공지사항 데이터
     const mockNotices = [

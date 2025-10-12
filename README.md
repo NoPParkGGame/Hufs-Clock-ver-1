@@ -1,107 +1,110 @@
-# HUFS 종강시계 Chrome Extension
+# HUFS 종강시계
 
-한국외대 종강/개강까지 남은 시간을 보여주는 Chrome Extension입니다.
+한국외대 학생들을 위한 실시간 학사일정, 공지사항, 학식 정보를 제공하는 Chrome 확장 프로그램입니다.
 
-## 주요 기능
+## ✨ 주요 기능
 
-실시간 학사일정, 공지사항, 급식 정보 표시
-자동 캐시 관리 (12시간 유효기간)
-토글 기능, 반응형 디자인, 다중 테마 지원
+- 실시간 학기 개강/종강 카운트다운
+- 통합 공지사항 표시 (일반 + 학사 공지)
+- 실시간 학식 메뉴
+- 다크/라이트 테마 지원
+- 자동 데이터 캐싱 (12시간)
 
-## Chrome Web Store 설치
+## 🚀 설치
 
-1. HUFS 종강시계에서 설치
-2. Chrome에 자동 추가됨
-3. 바로 사용 가능
+### Chrome Web Store
+1. [Chrome Web Store](https://chrome.google.com/webstore)에서 "HUFS 종강시계" 검색
+2. 설치 후 새 탭 열기
 
-문제가 발생하면 register_host.bat를 관리자 권한으로 실행
+### 로컬 개발
+```bash
+# 환경 확인
+python --version  # 3.8+
 
-## 로컬 개발용 설치
+# 의존성 설치
+pip install -r requirements.txt
 
-1. 패키지 설치
-   pip install -r requirements.txt
+# 호스트 등록 (관리자 권한)
+register_host.bat
 
-2. Native Messaging Host 등록
-   register_host.bat를 관리자 권한으로 실행
+# Chrome 확장 프로그램 로드
+# chrome://extensions/ → 개발자 모드 → 압축해제된 확장 프로그램 로드 → Hufs_Clock 폴더 선택
+```
 
-3. Extension ID 설정
-   - chrome://extensions/에서 ID 복사
-   - native_messaging_host.json의 allowed_origins 수정
+##  사용법
 
-4. Chrome Extension 로드
-   - chrome://extensions/에서 개발자 모드 활성화
-   - 압축해제된 확장 프로그램 로드 선택
-   - Hufs_Clock 폴더 선택
+- 아이콘 클릭 → 팝업 표시
+- 테마 버튼 → 다크/라이트 모드 전환
+- 학식 버튼 → 급식 메뉴 토글
+- 새로고침 버튼 → 공지사항 업데이트
 
-## 사용법
+## 🔄 크롤링 시스템
 
-- 팝업: 확장 프로그램 아이콘 클릭
-- 새로고침 버튼: 공지사항 즉시 크롤링
-- 캐시 만료 시 자동 백그라운드 크롤링
+```
+사용자 액션 → 캐시 체크 → 크롤링 요청 → 병렬 처리 → 데이터 저장 → UI 업데이트
+      ↓          ↓           ↓          ↓           ↓           ↓
+   팝업 열기 → 12시간 검증 → background.js → update_cache.py → JSON 캐시 → 리로드
+```
 
-## 캐시 및 크롤링
+**주요 특징:**
+- **12시간 자동 캐싱**: 불필요한 크롤링 방지
+- **병렬 크롤링**: 학사일정 + 공지사항 + 급식 동시 처리
+- **지능적 업데이트**: 캐시 유효시 요청 생략
 
-- 유효기간: 12시간
-- 수동 크롤링: python update_cache.py (전체) 또는 python update_cache.py notices (공지사항만)
+## �️ 기술 스택
 
-## 파일 구조
+### Frontend
+- **HTML5**: 시맨틱 마크업 및 접근성
+- **CSS3**: Flexbox, Grid, CSS Variables, 반응형 디자인
+- **Vanilla JavaScript**: ES6+ 모던 자바스크립트, 비동기 처리
 
-Hufs_Clock/
-├── manifest.json
-├── popup.html
-├── popup.js
-├── background.js
-├── native_messaging_host.py
-├── update_cache.py
-├── native_messaging_host.json
-├── register_host.bat
-├── requirements.txt
-├── css/
-│   ├── main.css
-│   ├── responsive.css
-│   ├── components/
-│   └── themes/
-├── fonts/
-├── icons/
-├── images/
-└── README.md
+### Backend
+- **Python 3.8+**: 크롤링 및 데이터 처리
+- **BeautifulSoup4**: HTML 파싱 및 데이터 추출
+- **Requests**: HTTP 클라이언트 및 API 통신
+- **Selenium**: 동적 웹페이지 처리 및 자동화
 
-## 크롤링 데이터
+### Chrome Extension
+- **Manifest V3**: 최신 확장 프로그램 표준
+- **Native Messaging API**: Python ↔ JavaScript 안전 통신
+- **Service Worker**: 백그라운드 작업 및 이벤트 처리
+- **Storage API**: 로컬 데이터 및 설정 관리
 
-학사일정, 공지사항, 급식 정보
-저장: schedule_cache.json, notice_cache.json, meal_cache.json
+## �🐛 문제 해결
 
-## 기술 스택
+### 설치 오류
+```bash
+# Python 버전 확인 (3.8+ 필요)
+python --version
 
-Frontend: HTML, CSS, JavaScript
-Backend: Python (크롤링)
-통신: Chrome Native Messaging API
-크롤링: BeautifulSoup, requests, Selenium
+# 의존성 설치
+pip install -r requirements.txt
 
-## 공지사항 기능
+# 호스트 등록 (관리자 권한 필수)
+register_host.bat
+```
 
-- 일반 공지사항 + 학사 공지사항 통합 표시
-- 날짜 내림차순 정렬 (최신 공지 우선)
-- 최대 20개 표시
-- 모바일 최적화 (세로 배치, 중앙 정렬)
+### 크롤링 실패
+```bash
+# 전체 데이터 크롤링
+python update_cache.py
 
-## 문제 해결
+# 공지사항만 업데이트
+python update_cache.py notices
+```
 
-Native Messaging 오류
-- register_host.bat 관리자 권한 재실행
+### 캐시 문제
+```
+# 캐시 파일들 삭제
+rm *_cache.json
 
-크롤링 오류
-- register_host.bat 재실행
-- Extension ID 확인
+# 확장 프로그램 재시작
+```
 
-설치 오류
-- Python 3.8+ 설치 확인
-- pip install -r requirements.txt 재실행
+### 기타 문제
+- **확장 프로그램이 작동하지 않음**: `chrome://extensions/`에서 재로드
+- **데이터가 표시되지 않음**: 캐시 파일 삭제 후 재시작
+- **네이티브 메시징 오류**: `register_host.bat` 재실행
 
-## 개발자 노트
+---
 
-캐시 전략: 12시간 유효기간
-병렬 크롤링: 속도 향상
-DOM 최적화: 성능 개선
-모듈화: 유지보수성 향상
-모바일 반응형: 세로 레이아웃 적용

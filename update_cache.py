@@ -294,45 +294,52 @@ def is_cache_valid(cache_file, max_age_hours=1):
 
 def main():
     try:
-        print("HUFS 데이터 크롤링 및 로컬 저장 시작")
-        
         script_dir = os.path.dirname(os.path.abspath(__file__))
         
         # 명령줄 인자 확인
-        if len(sys.argv) > 1 and sys.argv[1] == 'notices':
-            # 일반 공지사항과 학사 공지사항 모두 크롤링
-            general_notices = crawl_notices()
-            haksa_notices = crawl_haksa_notices()
+        if len(sys.argv) > 1:
+            action = sys.argv[1]
             
-            # 공지사항 합치기
-            all_notices = general_notices + haksa_notices
-            
-            # 날짜로 내림차순 정렬 (최신 날짜가 위로)
-            def parse_date(date_str):
-                try:
-                    month, day = map(int, date_str.split('.'))
-                    # 올해 연도를 가정하고 datetime 객체 생성
-                    current_year = datetime.now().year
-                    return datetime(current_year, month, day)
-                except:
-                    return datetime.min  # 파싱 실패 시 가장 오래된 것으로 처리
-            
-            all_notices.sort(key=lambda x: parse_date(x['date']), reverse=True)
-            
-            # 상위 20개만 저장 (일반 10개 + 학사 10개)
-            all_notices = all_notices[:20]
-            
-            notice_data = {
-                'timestamp': datetime.now().isoformat(),
-                'notices': all_notices
-            }
-            
-            # JSON 파일로 저장
-            with open(os.path.join(script_dir, 'notice_cache.json'), 'w', encoding='utf-8') as f:
-                json.dump(notice_data, f, ensure_ascii=False, indent=2)
-            
-            print(f"공지사항 업데이트 완료: 일반 {len(general_notices)}개, 학사 {len(haksa_notices)}개, 총 {len(all_notices)}개 저장")
-            return
+            if action == 'notices':
+                # 일반 공지사항과 학사 공지사항 모두 크롤링 (병렬 처리)
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future_general = executor.submit(crawl_notices)
+                    future_haksa = executor.submit(crawl_haksa_notices)
+                    
+                    general_notices = future_general.result()
+                    haksa_notices = future_haksa.result()
+                
+                # 공지사항 합치기
+                all_notices = general_notices + haksa_notices
+                
+                # 날짜로 내림차순 정렬 (최신 날짜가 위로)
+                def parse_date(date_str):
+                    try:
+                        month, day = map(int, date_str.split('.'))
+                        # 올해 연도를 가정하고 datetime 객체 생성
+                        current_year = datetime.now().year
+                        return datetime(current_year, month, day)
+                    except:
+                        return datetime.min  # 파싱 실패 시 가장 오래된 것으로 처리
+                
+                all_notices.sort(key=lambda x: parse_date(x['date']), reverse=True)
+                
+                # 상위 20개만 저장 (일반 10개 + 학사 10개)
+                all_notices = all_notices[:20]
+                
+                notice_data = {
+                    'timestamp': datetime.now().isoformat(),
+                    'notices': all_notices
+                }
+                
+                # JSON 파일로 저장
+                with open(os.path.join(script_dir, 'notice_cache.json'), 'w', encoding='utf-8') as f:
+                    json.dump(notice_data, f, ensure_ascii=False, indent=2)
+                
+                print(f"공지사항 업데이트 완료: 일반 {len(general_notices)}개, 학사 {len(haksa_notices)}개, 총 {len(all_notices)}개 저장")
+                return {"success": True, "message": "공지사항 업데이트 완료"}
+        
+        print("HUFS 데이터 크롤링 및 로컬 저장 시작")
         
         # 캐시 유효성 확인
         cache_files = [
@@ -341,11 +348,11 @@ def main():
             os.path.join(script_dir, 'meal_cache.json')
         ]
         
-        all_cache_valid = all(is_cache_valid(cache_file, max_age_hours=12) for cache_file in cache_files)
+        all_cache_valid = all(is_cache_valid(cache_file, max_age_hours=CACHE_MAX_AGE_HOURS) for cache_file in cache_files)
         
         if all_cache_valid:
             print("모든 캐시가 유효합니다. 크롤링을 건너뜁니다.")
-            return
+            return {"success": True, "message": "모든 캐시가 유효합니다. 크롤링을 건너뜁니다."}
         
         print("캐시가 오래되었거나 없어 전체 크롤링을 시작합니다.")
         
@@ -389,8 +396,10 @@ def main():
             json.dump(meal_data, f, ensure_ascii=False, indent=2)
 
         print(f"데이터 업데이트 완료: 학사일정, 공지사항 {len(notices)}개, 급식 {len(meals)}개")
+        return {"success": True, "message": f"데이터 업데이트 완료: 학사일정, 공지사항 {len(notices)}개, 급식 {len(meals)}개"}
     except Exception as e:
         print(f"크롤링 오류: {e}")
+        return {"success": False, "error": str(e)}
 
 
 if __name__ == "__main__":

@@ -60,14 +60,16 @@ def main():
                               capture_output=True, text=True, cwd=script_dir, encoding='cp949', errors='replace')
 
         if result.returncode == 0:
-            logging.info("크롤링 성공")
+            logging.info("스크립트 실행 성공")
+            
+            # 일반 크롤링의 경우
             send_message({
                 "success": True,
                 "message": "크롤링 완료",
                 "output": result.stdout.strip()
             })
         else:
-            logging.error(f"크롤링 실패: {result.stderr.strip()}")
+            logging.error(f"스크립트 실행 실패: {result.stderr.strip()}")
             send_message({
                 "success": False,
                 "error": result.stderr.strip()
