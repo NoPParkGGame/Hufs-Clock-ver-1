@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "HUFS 종강시계 v1",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "description": "한국외대 종강/개강까지 남은 시간을 보여주는 확장 프로그램입니다.",
     "action": {
         "default_icon": {
