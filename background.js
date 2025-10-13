@@ -17,12 +17,13 @@ function fetchDataFromAPI(retries = 1) {
             if (!data || !data.timestamp) {
                 throw new Error("Invalid data received from API.");
             }
+            const updateDate = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD format
             return chrome.storage.local.set({
-                'schedule_cache': { timestamp: data.timestamp, schedule: data.schedule },
-                'notice_cache': { timestamp: data.timestamp, notices: data.notices },
-                'meal_cache': { timestamp: data.timestamp, meals: data.meals }
+                'schedule_cache': { timestamp: data.timestamp, schedule: data.schedule, updateDate: updateDate },
+                'notice_cache': { timestamp: data.timestamp, notices: data.notices, updateDate: updateDate },
+                'meal_cache': { timestamp: data.timestamp, meals: data.meals, updateDate: updateDate }
             }).then(() => {
-                console.log("[BG] Data successfully fetched and stored.");
+                console.log(`[BG] Data successfully fetched and stored with updateDate: ${updateDate}.`);
             });
         })
         .catch(error => {

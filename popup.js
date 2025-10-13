@@ -6,11 +6,6 @@ let meals = [];
 // 1. 데이터 관리 (로딩 및 업데이트)
 // ===============================================================================
 
-const isSameDay = (d1, d2) =>
-    d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
-
 function loadDataAndRender() {
     console.log("[POPUP] Attempting to load data from local storage...");
     const keys = ['schedule_cache', 'notice_cache', 'meal_cache'];
@@ -35,12 +30,14 @@ function loadDataAndRender() {
         }
 
         if (hasData) {
-            const isCacheFromToday = isSameDay(new Date(latestTimestamp), new Date());
-            if (isCacheFromToday) {
-                console.log("[POPUP] Valid cache from today found. Rendering UI.");
+            const todayDate = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD format
+            const cacheUpdateDate = result.schedule_cache?.updateDate || result.notice_cache?.updateDate || result.meal_cache?.updateDate;
+
+            if (cacheUpdateDate === todayDate) {
+                console.log(`[POPUP] Valid cache from today (${cacheUpdateDate}) found. Rendering UI.`);
                 renderAllUI(new Date(latestTimestamp));
             } else {
-                console.log("[POPUP] Cache is outdated. Forcing update.");
+                console.log(`[POPUP] Cache is outdated (cache date: ${cacheUpdateDate}, today: ${todayDate}). Forcing update.`);
                 forceUpdate();
             }
         } else {
@@ -101,7 +98,10 @@ function renderCountdownUI() {
     }
 
     const now = new Date();
-    const parseDate = (dateStr, yearOffset = 0) => new Date(new Date().getFullYear() + yearOffset, ...dateStr.split('.').map(n => parseInt(n, 10) - 1), 23, 59, 59);
+    const parseDate = (dateStr, yearOffset = 0) => {
+        const [month, day] = dateStr.split('.').map(n => parseInt(n, 10));
+        return new Date(new Date().getFullYear() + yearOffset, month - 1, day, 23, 59, 59);
+    };
     
     const firstSemesterStart = parseDate(schedule.first_start);
     const firstSemesterEnd = parseDate(schedule.first_end);
