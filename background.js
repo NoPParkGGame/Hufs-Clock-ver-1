@@ -1,16 +1,10 @@
-// background.js (API 버전)
-
-console.log("[BG] 백그라운드 스크립트 로드됨 (API 버전)");
-
-// Vercel API 엔드포인트
 const API_ENDPOINT = "https://hufs-clock-api.vercel.app/api/data";
 
 /**
- * API로부터 모든 데이터를 가져와서 chrome.storage.local에 저장하는 함수
+ * API 서버로부터 모든 데이터를 가져와 chrome.storage.local에 저장합니다.
  */
 function fetchDataFromAPI() {
-    console.log(`[BG] API로부터 데이터 가져오는 중: ${API_ENDPOINT}`);
-    
+    console.log("[BG] Starting data fetch from API...");
     return fetch(API_ENDPOINT)
         .then(response => {
             if (!response.ok) {
@@ -20,45 +14,47 @@ function fetchDataFromAPI() {
         })
         .then(data => {
             if (!data || !data.timestamp) {
-                throw new Error("API로부터 유효하지 않은 데이터를 받았습니다.");
+                throw new Error("Invalid data received from API.");
             }
-            console.log("[BG] API로부터 데이터 수신 성공");
-            // 수신된 데이터를 각 캐시에 맞게 저장
             return chrome.storage.local.set({
                 'schedule_cache': { timestamp: data.timestamp, schedule: data.schedule },
                 'notice_cache': { timestamp: data.timestamp, notices: data.notices },
                 'meal_cache': { timestamp: data.timestamp, meals: data.meals }
+            }).then(() => {
+                console.log("[BG] Data successfully fetched and stored.");
             });
+        })
+        .catch(error => {
+            console.error("[BG] Failed to fetch or store data:", error);
+            throw error;
         });
 }
 
-// Popup이나 다른 곳에서 메시지 수신
+/**
+ * Popup 스크립트로부터 메시지를 수신합니다.
+ */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log('[BG] 메시지 수신:', request.action);
-
-    // 'force_update' 요청을 받으면 API를 통해 데이터를 강제로 새로고침
     if (request.action === 'force_update') {
+        console.log("[BG] 'force_update' message received.");
         fetchDataFromAPI()
-            .then(() => {
-                console.log('[BG] 데이터 강제 업데이트 및 저장 성공');
-                sendResponse({ success: true });
-            })
-            .catch(error => {
-                console.error('[BG] 데이터 강제 업데이트 실패:', error);
-                sendResponse({ success: false, error: error.message });
-            });
-        return true; // 비동기 응답을 위해 true 반환
+            .then(() => sendResponse({ success: true }))
+            .catch(error => sendResponse({ success: false, error: error.message }));
+        return true; // Keep message channel open for async response
     }
 });
 
-// 확장 프로그램이 처음 설치될 때 또는 업데이트될 때 데이터 가져오기
+/**
+ * 확장 프로그램이 설치/업데이트될 때 실행됩니다.
+ */
 chrome.runtime.onInstalled.addListener((details) => {
-    console.log('[BG] onInstalled 이벤트 발생:', details.reason);
+    console.log(`[BG] onInstalled event triggered (reason: ${details.reason}).`);
     fetchDataFromAPI();
 });
 
-// 크롬이 시작될 때마다 데이터 가져오기
+/**
+ * 크롬 브라우저가 시작될 때 실행됩니다.
+ */
 chrome.runtime.onStartup.addListener(() => {
-    console.log('[BG] 크롬 시작됨. 데이터 업데이트 시도.');
+    console.log("[BG] Chrome startup event triggered.");
     fetchDataFromAPI();
 });
