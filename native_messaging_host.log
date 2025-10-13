@@ -1712,3 +1712,11 @@
 2025-10-13 00:31:16,264 - INFO - 메시지 수신: {'action': 'update_notices'}
 2025-10-13 00:31:16,265 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py with args: ['notices']
 2025-10-13 00:31:17,687 - INFO - 스크립트 실행 성공
+2025-10-13 16:18:57,502 - INFO - Native messaging host 시작
+2025-10-13 16:18:57,504 - INFO - 메시지 수신: {'action': 'update_cache'}
+2025-10-13 16:18:57,504 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py with args: []
+2025-10-13 16:19:06,209 - INFO - Native messaging host 시작
+2025-10-13 16:19:06,209 - INFO - 메시지 수신: {'action': 'update_notices'}
+2025-10-13 16:19:06,210 - INFO - 크롤링 스크립트 실행: C:\Users\samsung\OneDrive\바탕 화면\Hufs_Clock\update_cache.py with args: ['notices']
+2025-10-13 16:19:10,756 - INFO - 스크립트 실행 성공
+2025-10-13 16:19:19,884 - INFO - 스크립트 실행 성공

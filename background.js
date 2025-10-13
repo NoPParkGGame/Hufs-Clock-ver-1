@@ -1,88 +1,64 @@
-// Background script for HUFS Clock Extension
+// background.js (API 버전)
 
-console.log("[BG] 백그라운드 스크립트 로드됨");
+console.log("[BG] 백그라운드 스크립트 로드됨 (API 버전)");
 
-chrome.action.onClicked.addListener((tab) => {
-    console.log("[BG] 액션 클릭됨, 팝업 열기");
-    const url = chrome.runtime.getURL('popup.html');
-    console.log("[BG] 팝업 URL:", url);
-    chrome.tabs.create({ url: url });
-});
+// Vercel API 엔드포인트
+const API_ENDPOINT = "https://hufs-clock-api.vercel.app/api/data";
 
-// Native messaging으로 전체 데이터 업데이트
-function updateCacheData() {
-    return new Promise((resolve, reject) => {
-        chrome.runtime.sendNativeMessage(
-            'com.hufs.clock.updater',
-            { action: 'update_cache' },
-            (response) => {
-                if (chrome.runtime.lastError) {
-                    console.error('[BG] 네이티브 메시징 오류:', chrome.runtime.lastError);
-                    reject(chrome.runtime.lastError);
-                } else {
-                    console.log('[BG] 캐시 업데이트 응답 수신');
-                    if (response.output) {
-                        console.log('[BG] 크롤링 출력:', response.output.substring(0, 100) + '...');
-                    }
-                    resolve(response);
-                }
+/**
+ * API로부터 모든 데이터를 가져와서 chrome.storage.local에 저장하는 함수
+ */
+function fetchDataFromAPI() {
+    console.log(`[BG] API로부터 데이터 가져오는 중: ${API_ENDPOINT}`);
+    
+    return fetch(API_ENDPOINT)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        );
-    });
+            return response.json();
+        })
+        .then(data => {
+            if (!data || !data.timestamp) {
+                throw new Error("API로부터 유효하지 않은 데이터를 받았습니다.");
+            }
+            console.log("[BG] API로부터 데이터 수신 성공");
+            // 수신된 데이터를 각 캐시에 맞게 저장
+            return chrome.storage.local.set({
+                'schedule_cache': { timestamp: data.timestamp, schedule: data.schedule },
+                'notice_cache': { timestamp: data.timestamp, notices: data.notices },
+                'meal_cache': { timestamp: data.timestamp, meals: data.meals }
+            });
+        });
 }
 
-// Native messaging으로 공지사항 데이터 업데이트
-function updateNoticesData() {
-    return new Promise((resolve, reject) => {
-        chrome.runtime.sendNativeMessage(
-            'com.hufs.clock.updater',
-            { action: 'update_notices' },
-            (response) => {
-                if (chrome.runtime.lastError) {
-                    console.error('[BG] 네이티브 메시징 오류:', chrome.runtime.lastError);
-                    reject(chrome.runtime.lastError);
-                } else {
-                    console.log('[BG] 공지사항 업데이트 응답 수신');
-                    if (response.output) {
-                        console.log('[BG] 크롤링 출력:', response.output.substring(0, 100) + '...');
-                    }
-                    resolve(response);
-                }
-            }
-        );
-    });
-}
-
-// Popup에서 메시지 수신
+// Popup이나 다른 곳에서 메시지 수신
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log('[BG] 메시지 수신:', request.action);
-    
-    if (request.action === 'update_cache') {
-        console.log('[BG] 캐시 업데이트 처리 중');
-        updateCacheData()
-            .then((result) => {
-                console.log('[BG] 캐시 업데이트: 성공');
-                sendResponse({ success: true, data: result });
+
+    // 'force_update' 요청을 받으면 API를 통해 데이터를 강제로 새로고침
+    if (request.action === 'force_update') {
+        fetchDataFromAPI()
+            .then(() => {
+                console.log('[BG] 데이터 강제 업데이트 및 저장 성공');
+                sendResponse({ success: true });
             })
-            .catch((error) => {
-                console.log('[BG] 캐시 업데이트: 실패 -', error.message);
+            .catch(error => {
+                console.error('[BG] 데이터 강제 업데이트 실패:', error);
                 sendResponse({ success: false, error: error.message });
             });
-        return true;
+        return true; // 비동기 응답을 위해 true 반환
     }
-    if (request.action === 'update_notices') {
-        console.log('[BG] 공지사항 업데이트 처리 중');
-        updateNoticesData()
-            .then((result) => {
-                console.log('[BG] 공지사항 업데이트: 성공');
-                sendResponse({ success: true, data: result });
-            })
-            .catch((error) => {
-                console.log('[BG] 공지사항 업데이트: 실패 -', error.message);
-                sendResponse({ success: false, error: error.message });
-            });
-        return true;
-    }
-    
-    console.log('[BG] 알 수 없는 액션:', request.action);
+});
+
+// 확장 프로그램이 처음 설치될 때 또는 업데이트될 때 데이터 가져오기
+chrome.runtime.onInstalled.addListener((details) => {
+    console.log('[BG] onInstalled 이벤트 발생:', details.reason);
+    fetchDataFromAPI();
+});
+
+// 크롬이 시작될 때마다 데이터 가져오기
+chrome.runtime.onStartup.addListener(() => {
+    console.log('[BG] 크롬 시작됨. 데이터 업데이트 시도.');
+    fetchDataFromAPI();
 });
